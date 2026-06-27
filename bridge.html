@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Your Report Is Generating | StructTech</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Meta Pixel — replace YOUR_PIXEL_ID -->
+  <script>
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+  document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', 'YOUR_PIXEL_ID');
+  fbq('track', 'PageView');
+  // This is the bottom of the funnel — fire custom conversion event
+  fbq('trackCustom', 'FunnelComplete', { content_name: 'Revenue Leak Scan Bridge' });
+  </script>
+
+  <style>
+    .step-item {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+      padding: 14px 16px; width: 100%; max-width: 420px;
+      opacity: 0;
+      animation: fadeUp 0.4s ease forwards;
+    }
+    .step-item:nth-child(1) { animation-delay: 0.8s; }
+    .step-item:nth-child(2) { animation-delay: 1.3s; }
+    .step-item:nth-child(3) { animation-delay: 1.8s; }
+    .step-check { width: 28px; height: 28px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+    .step-text { font-size: 13px; color: var(--gray); }
+    .step-text strong { color: var(--white); }
+    @keyframes fadeUp { to { opacity:1; transform:translateY(0); } from { opacity:0; transform:translateY(10px); } }
+
+    .cta-card {
+      background: linear-gradient(135deg, #0d1326, #111929);
+      border: 1px solid var(--blue);
+      border-radius: 14px;
+      padding: 28px 24px;
+      width: 100%; max-width: 460px;
+      text-align: center;
+    }
+    .testimonial {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+      padding: 18px 20px; width: 100%; max-width: 460px; text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="page-hd">
+    <a href="https://structtek.com" class="st-logo">
+      STRUCTTECH <span class="slash">/</span> <span class="sub">AUDIT</span>
+    </a>
+  </div>
+
+  <div class="page-bd">
+
+    <!-- Generating status -->
+    <div style="text-align:center;width:100%;max-width:460px">
+      <div style="font-size:32px;margin-bottom:12px">⚙️</div>
+      <h2 style="font-size:clamp(24px,5.5vw,32px);margin-bottom:10px">
+        YOUR REPORT IS<br><span class="text-orange">GENERATING NOW</span>
+      </h2>
+      <p id="greeting-line" style="font-size:15px;color:var(--gray);line-height:1.6;margin-bottom:20px">
+        Our AI is analyzing your answers and building a personalized Revenue Leak Report. Check your inbox in the next few minutes.
+      </p>
+
+      <!-- Fake progress bar (builds trust) -->
+      <div class="gen-bar-wrap" style="margin:0 auto 10px">
+        <div class="gen-bar" id="gen-prog" style="width:0%"></div>
+      </div>
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--muted)" id="gen-label">
+        Analyzing your diagnostic…
+      </div>
+    </div>
+
+    <div class="div" style="margin:16px 0"></div>
+
+    <!-- Checklist of what's being built -->
+    <div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);letter-spacing:0.1em;text-align:center;margin-bottom:12px">
+      WHAT'S IN YOUR REPORT
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;width:100%;max-width:420px;align-items:center">
+      <div class="step-item">
+        <div class="step-check">✓</div>
+        <div class="step-text"><strong>Full Revenue Leak Breakdown</strong> — every gap scored, ranked by cost</div>
+      </div>
+      <div class="step-item">
+        <div class="step-check">✓</div>
+        <div class="step-text"><strong>90-Day Attack Plan</strong> — Phase 1/2/3 with specific actions for your situation</div>
+      </div>
+      <div class="step-item">
+        <div class="step-check">✓</div>
+        <div class="step-text"><strong>Tool Stack Recommendation</strong> — what to use, what to drop, how to connect it</div>
+      </div>
+    </div>
+
+    <div class="div" style="margin:16px 0"></div>
+
+    <!-- Social proof stat row -->
+    <div class="stat-row" style="margin-bottom:8px">
+      <div class="stat-item">
+        <div class="stat-num">$2.4K</div>
+        <div class="stat-lbl">AVG MONTHLY LEAK FOUND</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">90</div>
+        <div class="stat-lbl">DAY TURNAROUND PLAN</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">3×</div>
+        <div class="stat-lbl">AVG EFFICIENCY GAIN</div>
+      </div>
+    </div>
+
+    <div class="div" style="margin:16px 0"></div>
+
+    <!-- CTA Card — Strategy Call -->
+    <div class="cta-card">
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--blue-hl);letter-spacing:0.1em;margin-bottom:12px">
+        WHILE YOU WAIT — OPTIONAL
+      </div>
+      <h3 style="font-size:clamp(20px,5vw,26px);margin-bottom:10px;line-height:1.2">
+        WANT TO TALK THROUGH<br>YOUR RESULTS LIVE?
+      </h3>
+      <p style="font-size:14px;color:var(--gray);line-height:1.6;margin-bottom:18px">
+        Book a free 30-minute strategy call with Jacob Walker at StructTech.
+        We'll walk through your specific leaks and tell you exactly what to fix first — no fluff, no pitch.
+      </p>
+      <a href="https://structtek.com/operational-audit" class="btn btn-orange" style="width:100%">
+        BOOK FREE STRATEGY CALL →
+      </a>
+      <p style="font-size:11px;color:var(--muted);margin-top:10px">
+        30 min · Free · No commitment
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div style="text-align:center;margin-top:20px">
+      <p style="font-size:12px;color:var(--muted)">
+        Questions? Email
+        <a href="mailto:hello@structtek.com" style="color:var(--gray)">hello@structtek.com</a>
+      </p>
+      <p style="font-size:11px;color:var(--muted);margin-top:6px">
+        <a href="https://structtek.com" style="color:var(--muted)">structtek.com</a>
+        &nbsp;·&nbsp;
+        <a href="https://structtek.com/privacy-policy" style="color:var(--muted)">Privacy</a>
+      </p>
+    </div>
+
+  </div><!-- /page-bd -->
+</div><!-- /page -->
+
+<script>
+// Personalize greeting if we have a name
+var firstName = localStorage.getItem('st_first_name');
+if (firstName) {
+  document.getElementById('greeting-line').textContent =
+    firstName + ', our AI is analyzing your answers and building your personalized Revenue Leak Report right now. Check your inbox in the next few minutes.';
+}
+
+// Animated "generating" progress bar (fake — just for UX feel)
+var steps = [
+  { pct: 20,  label: 'Analyzing your diagnostic…',          delay: 400  },
+  { pct: 45,  label: 'Identifying revenue leak patterns…',  delay: 1800 },
+  { pct: 70,  label: 'Building 90-day attack plan…',        delay: 3400 },
+  { pct: 88,  label: 'Personalizing recommendations…',      delay: 5200 },
+  { pct: 100, label: '✓ Report delivered to your inbox',    delay: 7000 }
+];
+
+steps.forEach(function(s) {
+  setTimeout(function() {
+    document.getElementById('gen-prog').style.width = s.pct + '%';
+    document.getElementById('gen-label').textContent = s.label;
+  }, s.delay);
+});
+</script>
+
+</body>
+</html>

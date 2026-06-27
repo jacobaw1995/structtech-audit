@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Your Revenue Leak Results | StructTech</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Meta Pixel — replace YOUR_PIXEL_ID -->
+  <script>
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+  document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', 'YOUR_PIXEL_ID');
+  fbq('track', 'PageView');
+  </script>
+
+  <!-- GA4 — replace YOUR_GA4_ID -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_GA4_ID"></script>
+  <script>
+    window.dataLayer=window.dataLayer||[];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js',new Date()); gtag('config','YOUR_GA4_ID');
+  </script>
+
+  <style>
+    /* Extra styles specific to results page */
+    .gate-box {
+      background: linear-gradient(135deg, #0d1326 0%, #11192e 100%);
+      border: 1px solid var(--border-hl);
+      border-radius: 14px;
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 460px;
+      text-align: center;
+    }
+    .gate-headline {
+      font-family: var(--font-head);
+      font-size: clamp(22px,5vw,28px);
+      margin-bottom: 10px;
+      line-height: 1.15;
+    }
+    .disclaimer { font-size: 11px; color: var(--muted); line-height: 1.5; max-width: 380px; }
+    .score-num { display: inline-block; animation: countUp 1.4s ease forwards; }
+    @keyframes countUp { from { opacity:0; transform:scale(0.6); } to { opacity:1; transform:scale(1); } }
+
+    /* Leak list fade-in */
+    .leak-card { opacity: 0; animation: fadeUp 0.4s ease forwards; }
+    .leak-card:nth-child(1) { animation-delay: 0.9s; }
+    .leak-card:nth-child(2) { animation-delay: 1.1s; }
+    .leak-card:nth-child(3) { animation-delay: 1.3s; }
+    @keyframes fadeUp { to { opacity:1; transform:translateY(0); } from { opacity:0; transform:translateY(10px); } }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="page-hd">
+    <a href="https://structtek.com" class="st-logo">
+      STRUCTTECH <span class="slash">/</span> <span class="sub">RESULTS</span>
+    </a>
+    <span class="badge badge-orange">SCAN COMPLETE</span>
+  </div>
+
+  <div class="page-bd">
+
+    <!-- Score section -->
+    <div id="score-section" style="text-align:center;width:100%">
+      <div style="margin-bottom:8px;font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:0.1em">
+        YOUR REVENUE LEAK SCORE
+      </div>
+
+      <!-- Score ring -->
+      <div class="score-ring-wrap" style="margin:0 auto 16px">
+        <div class="score-ring">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle class="ring-bg"   cx="80" cy="80" r="66"/>
+            <circle class="ring-fill" cx="80" cy="80" r="66"
+              id="ring-arc"
+              stroke-dasharray="414.69"
+              stroke-dashoffset="414.69"
+              stroke="var(--orange)"/>
+          </svg>
+          <div class="ring-text">
+            <span id="score-display" class="score-num" style="color:var(--orange)">--</span>
+            <span style="font-size:16px;color:var(--muted)">/100</span>
+          </div>
+        </div>
+        <div class="ring-sub">OPERATIONAL EFFICIENCY</div>
+      </div>
+
+      <!-- Risk level badge -->
+      <div id="risk-badge" style="margin-bottom:20px"></div>
+
+      <!-- Risk description -->
+      <p id="risk-desc" style="font-size:14px;color:var(--gray);max-width:440px;margin:0 auto 24px;line-height:1.6"></p>
+    </div>
+
+    <!-- Stat boxes (monthly leak + efficiency) -->
+    <div class="stat-boxes">
+      <div class="stat-box">
+        <div class="stat-box-val text-red" id="leak-val">$--</div>
+        <div class="stat-box-lbl">EST. MONTHLY LEAK</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-val" id="efficiency-val">--%</div>
+        <div class="stat-box-lbl">OPERATIONAL EFFICIENCY</div>
+      </div>
+    </div>
+
+    <div class="div" style="margin:16px 0"></div>
+
+    <!-- Top leaks -->
+    <div style="width:100%;max-width:460px;text-align:left">
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:0.1em;margin-bottom:14px;text-align:center">
+        YOUR TOP REVENUE LEAKS IDENTIFIED
+      </div>
+      <div id="leaks-list" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+
+    <div class="div" style="margin:16px 0"></div>
+
+    <!-- Gate box -->
+    <div class="gate-box">
+      <div style="font-size:22px;margin-bottom:8px">🔐</div>
+      <div class="gate-headline">
+        UNLOCK YOUR FULL<br>
+        <span class="text-orange">REVENUE LEAK REPORT</span>
+      </div>
+      <p style="font-size:14px;color:var(--gray);margin:12px 0 20px;line-height:1.6">
+        Enter your details below and we'll send your personalized AI-generated
+        report — including a specific 90-day attack plan — straight to your inbox.
+      </p>
+
+      <form class="email-form" id="gate-form" onsubmit="submitGate(event)" style="margin:0 auto">
+        <input type="text"  id="f-name"    placeholder="First name"                required autocomplete="given-name">
+        <input type="text"  id="f-company" placeholder="Company name (optional)"   autocomplete="organization">
+        <select id="f-trade" style="width:100%;background:var(--bg-input);border:2px solid var(--border);border-radius:8px;color:var(--white);font-family:var(--font-body);font-size:16px;padding:14px 16px;outline:none;transition:border-color 0.15s;appearance:none;cursor:pointer">
+          <option value="" disabled selected>Your trade (optional)</option>
+          <option>HVAC</option>
+          <option>Plumbing</option>
+          <option>Electrical</option>
+          <option>Roofing</option>
+          <option>Concrete / Foundation</option>
+          <option>General Contracting</option>
+          <option>Landscaping</option>
+          <option>Other</option>
+        </select>
+        <input type="email" id="f-email"   placeholder="Your best email address"   required autocomplete="email">
+        <button type="submit" class="btn btn-orange" style="width:100%;margin-top:4px" id="submit-btn">
+          SEND MY REPORT →
+        </button>
+      </form>
+
+      <p class="disclaimer" style="margin:14px auto 0">
+        We respect your privacy. No spam — just your personalized report and
+        occasional insights for small construction teams.
+      </p>
+    </div>
+
+    <div style="margin-top:16px;text-align:center">
+      <p style="font-size:12px;color:var(--muted)">
+        Built by <a href="https://structtek.com" style="color:var(--gray)">StructTech LLC</a>
+        — Construction Workflow Consultants
+      </p>
+    </div>
+
+  </div><!-- /page-bd -->
+</div><!-- /page -->
+
+<script>
+/* ================================================================
+   LEAK KNOWLEDGE BASE
+   Maps question IDs → leak info for the results reveal
+   ================================================================ */
+var LEAK_DB = {
+  q1:  { icon:'📞', title:'Lead Response Gap',        body:'Slow lead response is costing you jobs. Research shows the first contractor to respond wins 78% of the time. Even a 30-minute delay can cost you the job to a competitor.' },
+  q2:  { icon:'📋', title:'Quote Follow-Up Failure',  body:'Quotes without follow-up sequences convert at ~20%. With an automated 3-touch follow-up, that jumps above 55%. Every unreturned quote is a potential job walking out the door.' },
+  q3:  { icon:'🏗️',  title:'Field-to-Office Friction', body:'Manual information transfer creates billing errors, delayed invoices, and hours of phone-tag every week. Each job is bleeding admin time that adds up to real cost.' },
+  q4:  { icon:'💰', title:'Blind Job Costing',         body:'Without real-time cost tracking, you can\'t catch overruns until the job is done — when it\'s too late to fix. Margin leaks start small and compound across every job.' },
+  q5:  { icon:'🔧', title:'Tool Fragmentation',        body:'Every disconnected app is a place for information to get lost, duplicated, or mishandled. Tool sprawl costs an average of 6+ hours per week in admin overhead for crews of 5.' },
+  q6:  { icon:'⚠️', title:'Single Point of Failure',  body:'A business that shuts down when one person is out is a liability. This is the #1 reason construction businesses plateau — they can\'t scale because the owner is the system.' },
+  q7:  { icon:'🧾', title:'Invoice Delay Drain',       body:'Every week you delay invoicing is a week you\'re floating your client\'s business interest-free. Late invoices also signal disorganization and invite disputes.' },
+  q8:  { icon:'📅', title:'Scheduling Chaos',          body:'Reactive scheduling creates show-up failures, double-bookings, and wasted drive time. Crew confusion kills morale and leads to the best guys finding more organized employers.' },
+  q9:  { icon:'👻', title:'Communication Black Hole',  body:'Clients who feel left in the dark escalate, dispute invoices, and don\'t refer. Proactive updates are the easiest way to generate 5-star reviews without asking for them.' },
+  q10: { icon:'🔒', title:'Owner Dependency Trap',     body:'If the business only works when you\'re present, you own a job — not a company. This is the ceiling that stops growth and makes vacation impossible.' }
+};
+
+/* ================================================================
+   RISK LEVELS
+   ================================================================ */
+var RISK_LEVELS = [
+  { min:80, level:'OPTIMIZED',  cls:'badge-green',  color:'var(--green)',
+    desc:'You\'re ahead of most contractors. Fine-tuning your systems can still unlock meaningful gains — the full report will show you where.' },
+  { min:55, level:'MODERATE',   cls:'badge-yellow', color:'var(--yellow)',
+    desc:'Your business functions, but there are real inefficiencies capping your growth. The full report will pinpoint the highest-impact fixes.' },
+  { min:30, level:'HIGH RISK',  cls:'badge-orange', color:'var(--orange)',
+    desc:'Significant operational gaps are costing you money every week. The full report includes a concrete 90-day plan to close these leaks fast.' },
+  { min:0,  level:'CRITICAL',   cls:'badge-red',    color:'var(--red)',
+    desc:'Your business is in reactive mode, losing money at multiple stages. The full report outlines the exact sequence to stabilize and rebuild properly.' }
+];
+
+/* ================================================================
+   REVENUE LEAK ESTIMATE
+   crew size × score bucket = estimated monthly revenue drain
+   ================================================================ */
+function estimateLeak(score, crew) {
+  var crewMult = crew <= 1 ? 1.0 : crew <= 3 ? 1.7 : crew <= 6 ? 2.8 : crew <= 9 ? 4.0 : 5.5;
+  var base = score >= 80 ? 300 : score >= 55 ? 900 : score >= 30 ? 1800 : 2800;
+  var raw = base * crewMult;
+  return Math.round(raw / 100) * 100; // nearest $100
+}
+
+function fmt(n) { return '$' + n.toLocaleString(); }
+
+/* ================================================================
+   MAIN INIT
+   ================================================================ */
+window.addEventListener('DOMContentLoaded', function() {
+  var score     = parseInt(localStorage.getItem('st_score')     || '42', 10);
+  var crew      = parseInt((JSON.parse(localStorage.getItem('st_answers') || '{}')).crew || 5, 10);
+  var topLeaks  = JSON.parse(localStorage.getItem('st_top_leaks') || '["q1","q4","q6"]');
+
+  // Risk level
+  var risk = RISK_LEVELS[RISK_LEVELS.length - 1];
+  for (var i = 0; i < RISK_LEVELS.length; i++) {
+    if (score >= RISK_LEVELS[i].min) { risk = RISK_LEVELS[i]; break; }
+  }
+
+  // Score ring animation
+  var circumference = 2 * Math.PI * 66; // 414.69
+  var arc = document.getElementById('ring-arc');
+  arc.style.stroke = risk.color;
+  setTimeout(function() {
+    arc.style.strokeDashoffset = circumference * (1 - score / 100);
+  }, 200);
+
+  // Score counter animation
+  var scoreEl = document.getElementById('score-display');
+  scoreEl.style.color = risk.color;
+  var start = 0, end = score, dur = 1200;
+  var startTime = null;
+  function animCount(ts) {
+    if (!startTime) startTime = ts;
+    var prog = Math.min((ts - startTime) / dur, 1);
+    scoreEl.textContent = Math.round(prog * end);
+    if (prog < 1) requestAnimationFrame(animCount);
+  }
+  requestAnimationFrame(animCount);
+
+  // Risk badge + desc
+  document.getElementById('risk-badge').innerHTML =
+    '<span class="badge ' + risk.cls + '" style="font-size:13px;padding:7px 18px">' + risk.level + '</span>';
+  document.getElementById('risk-desc').textContent = risk.desc;
+
+  // Stat boxes
+  var leak = estimateLeak(score, crew);
+  document.getElementById('leak-val').textContent = fmt(leak) + '/mo';
+  document.getElementById('efficiency-val').textContent = score + '%';
+  document.getElementById('efficiency-val').style.color = risk.color;
+
+  // Top leaks (first 2 shown, 3rd locked/blurred)
+  var leaksHtml = '';
+  topLeaks.slice(0, 3).forEach(function(id, i) {
+    var l = LEAK_DB[id] || { icon:'⚡', title:'Operational Gap', body:'Details in your full report.' };
+    var locked = i === 2;
+    leaksHtml +=
+      '<div class="leak-card' + (locked ? ' locked' : '') + '">' +
+        '<div class="leak-icon">' + l.icon + '</div>' +
+        '<div>' +
+          '<div class="leak-title">' + (i+1) + '. ' + l.title + '</div>' +
+          '<div class="leak-body">' + l.body + '</div>' +
+          (locked ? '<div class="lock-label">🔐 Unlock full details with your free report below</div>' : '') +
+        '</div>' +
+      '</div>';
+  });
+  document.getElementById('leaks-list').innerHTML = leaksHtml;
+});
+
+/* ================================================================
+   GATE FORM SUBMIT → Make.com webhook
+   ================================================================ */
+function submitGate(e) {
+  e.preventDefault();
+
+  var btn = document.getElementById('submit-btn');
+  btn.textContent = 'SENDING...';
+  btn.disabled = true;
+
+  var answers   = JSON.parse(localStorage.getItem('st_answers')   || '{}');
+  var score     = parseInt(localStorage.getItem('st_score')       || '0', 10);
+  var topLeaks  = JSON.parse(localStorage.getItem('st_top_leaks') || '[]');
+  var byQ       = JSON.parse(localStorage.getItem('st_by_q')      || '{}');
+  var crew      = answers.crew || 0;
+
+  var risk = 'CRITICAL';
+  if (score >= 80) risk = 'OPTIMIZED';
+  else if (score >= 55) risk = 'MODERATE';
+  else if (score >= 30) risk = 'HIGH RISK';
+
+  var leak = estimateLeak(score, crew);
+
+  var payload = {
+    name:    document.getElementById('f-name').value.trim(),
+    company: document.getElementById('f-company').value.trim(),
+    trade:   document.getElementById('f-trade').value,
+    email:   document.getElementById('f-email').value.trim(),
+    score:   score,
+    risk_level: risk,
+    revenue_leak_monthly: leak,
+    crew_size: crew,
+    top_leaks: topLeaks,
+    answers_by_q: byQ,
+    submitted_at: new Date().toISOString(),
+    source: 'audit.structtek.com'
+  };
+
+  var WEBHOOK_URL = 'https://hook.us2.make.com/ydikotp5yo053137e9ypz2krbw0uv3kr';
+
+  // Also write to Supabase directly (structtech project)
+  saveToSupabase(payload);
+
+  fetch(WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(function() { afterSubmit(payload.name); })
+  .catch(function() {
+    // Even if webhook fails, proceed — lead is captured in Supabase
+    afterSubmit(payload.name);
+  });
+}
+
+function afterSubmit(name) {
+  // Meta pixel Lead event
+  if (typeof fbq !== 'undefined') {
+    fbq('track', 'Lead', { content_name: 'Revenue Leak Scan', content_category: 'Email Gate' });
+  }
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'generate_lead', { event_category: 'funnel' });
+  }
+
+  // Store name for bridge page
+  localStorage.setItem('st_first_name', name);
+  window.location.href = 'bridge.html';
+}
+
+/* ================================================================
+   SUPABASE DIRECT WRITE
+   Saves lead to structtech project → structtech_prospects table
+   (Requires RLS policy allowing anon inserts — see SETUP.md)
+   ================================================================ */
+function saveToSupabase(payload) {
+  var SUPA_URL = 'https://ejlhrykcdfcyeooooodx.supabase.co';
+  var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqbGhyeWtjZGZjeWVvb29vb2R4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYyODM2OTUsImV4cCI6MjA1MTg1OTY5NX0.dLa4yCf6yIhOiFd0DjsHv0kMpBLaQS63m9fDLQtAsgQ';
+
+  fetch(SUPA_URL + '/rest/v1/audit_leads', {
+    method: 'POST',
+    headers: {
+      'apikey': SUPA_KEY,
+      'Authorization': 'Bearer ' + SUPA_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal'
+    },
+    body: JSON.stringify({
+      name:         payload.name,
+      email:        payload.email,
+      company:      payload.company,
+      trade:        payload.trade,
+      score:        payload.score,
+      risk_level:   payload.risk_level,
+      monthly_leak: payload.revenue_leak_monthly,
+      crew_size:    payload.crew_size,
+      top_leaks:    payload.top_leaks,
+      answers:      payload.answers_by_q,
+      source:       payload.source
+    })
+  }).catch(function(err) {
+    console.warn('Supabase write failed (non-blocking):', err);
+  });
+}
+</script>
+
+</body>
+</html>

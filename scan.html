@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Revenue Leak Scan™ | StructTech</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Meta Pixel — replace YOUR_PIXEL_ID -->
+  <script>
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+  document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', 'YOUR_PIXEL_ID');
+  fbq('track', 'PageView');
+  </script>
+</head>
+<body>
+
+<div class="page">
+  <!-- Header -->
+  <div class="page-hd">
+    <a href="https://structtek.com" class="st-logo">
+      STRUCTTECH <span class="slash">/</span> <span class="sub">SCAN</span>
+    </a>
+    <div id="q-counter" style="font-family:var(--font-mono);font-size:12px;color:var(--muted)">1 of 11</div>
+  </div>
+
+  <!-- Progress bar -->
+  <div style="width:100%;max-width:640px;margin-bottom:36px">
+    <div class="prog-wrap">
+      <div class="prog-fill" id="prog" style="width:9%"></div>
+    </div>
+  </div>
+
+  <!-- Question area -->
+  <div class="page-bd">
+    <div id="q-wrap" style="width:100%;max-width:560px;text-align:center"></div>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   QUESTION BANK
+   Each question: id, label (top badge), question text, scored flag,
+   and options array. Scored questions: points 0/2/6/10.
+   Unscored (crew): value = numeric crew size.
+   ================================================================ */
+var QUESTIONS = [
+  {
+    id: 'crew',
+    label: 'FIRST, TELL US ABOUT YOUR TEAM',
+    q: 'How many people are on your crew, including yourself?',
+    scored: false,
+    opts: [
+      { t: 'Just me — solo operator',  v: 1 },
+      { t: '2–3 people',               v: 3 },
+      { t: '4–6 people',               v: 5 },
+      { t: '7–9 people',               v: 8 },
+      { t: '10 or more',               v: 12 }
+    ]
+  },
+  {
+    id: 'q1',
+    label: 'LEAD RESPONSE',
+    q: 'When a potential client reaches out, how quickly do you respond?',
+    scored: true,
+    opts: [
+      { t: 'Same day — I have a system for it',                    p: 10 },
+      { t: 'Within 24–48 hours',                                   p: 6  },
+      { t: 'When I get a chance — sometimes a few days',           p: 2  },
+      { t: 'Honestly? Some leads probably slip through the cracks',p: 0  }
+    ]
+  },
+  {
+    id: 'q2',
+    label: 'ESTIMATE FOLLOW-UP',
+    q: 'After you send a quote, what\'s your follow-up process?',
+    scored: true,
+    opts: [
+      { t: 'Automated — I have sequences set up',                  p: 10 },
+      { t: 'I manually follow up 1–2 times',                       p: 6  },
+      { t: 'I send it and wait for them to call back',             p: 2  },
+      { t: 'What follow-up process?',                              p: 0  }
+    ]
+  },
+  {
+    id: 'q3',
+    label: 'FIELD → OFFICE',
+    q: 'How does job site information get back to the office for invoicing and payroll?',
+    scored: true,
+    opts: [
+      { t: 'Real-time — digital tools synced automatically',       p: 10 },
+      { t: 'Photos and texts throughout the day',                  p: 6  },
+      { t: 'End-of-day call or paper notes',                       p: 2  },
+      { t: 'It\'s a scramble — info gets lost or delayed',         p: 0  }
+    ]
+  },
+  {
+    id: 'q4',
+    label: 'JOB COST TRACKING',
+    q: 'How do you track job costs vs. your estimate in real time?',
+    scored: true,
+    opts: [
+      { t: 'Live dashboard — I know my numbers daily',             p: 10 },
+      { t: 'Weekly spreadsheet review',                            p: 6  },
+      { t: 'I reconcile when it\'s time to invoice',               p: 2  },
+      { t: 'I find out how the job did at tax season',             p: 0  }
+    ]
+  },
+  {
+    id: 'q5',
+    label: 'TOOL FRAGMENTATION',
+    q: 'How many separate apps does your team use to run a single job?',
+    scored: true,
+    opts: [
+      { t: '1–2 tools that handle everything',                     p: 10 },
+      { t: '3–4 tools with some overlap',                          p: 6  },
+      { t: '5+ tools that barely talk to each other',              p: 2  },
+      { t: 'Mostly texts, calls, and paper',                       p: 0  }
+    ]
+  },
+  {
+    id: 'q6',
+    label: 'KEY PERSON DEPENDENCY',
+    q: 'If your most important person — including you — is out sick for a week, what happens?',
+    scored: true,
+    opts: [
+      { t: 'Business runs fine — everything is documented',        p: 10 },
+      { t: 'Some slowdowns, but we push through',                  p: 6  },
+      { t: 'Real problems — jobs get delayed or dropped',          p: 2  },
+      { t: 'Everything stops',                                     p: 0  }
+    ]
+  },
+  {
+    id: 'q7',
+    label: 'INVOICE SPEED',
+    q: 'How quickly do you get invoices out after job completion?',
+    scored: true,
+    opts: [
+      { t: 'Same day or next day — it\'s automated',               p: 10 },
+      { t: 'Within the week',                                      p: 6  },
+      { t: '2–4 weeks when I get to it',                           p: 2  },
+      { t: 'Invoicing is a mess — payments are always late',       p: 0  }
+    ]
+  },
+  {
+    id: 'q8',
+    label: 'CREW SCHEDULING',
+    q: 'How do you schedule and communicate jobs to your crew?',
+    scored: true,
+    opts: [
+      { t: 'Digital scheduling with automatic crew notifications',  p: 10 },
+      { t: 'Shared group calendar or text chain',                  p: 6  },
+      { t: 'I call or text each person individually',              p: 2  },
+      { t: 'Day-by-day — crew finds out morning of',               p: 0  }
+    ]
+  },
+  {
+    id: 'q9',
+    label: 'CLIENT COMMUNICATION',
+    q: 'What\'s your system for keeping clients updated during a job?',
+    scored: true,
+    opts: [
+      { t: 'Automated milestone updates — clients always know where we are', p: 10 },
+      { t: 'I check in personally when something changes',         p: 6  },
+      { t: 'They mostly have to call me for updates',              p: 2  },
+      { t: 'No system — they\'re usually in the dark',             p: 0  }
+    ]
+  },
+  {
+    id: 'q10',
+    label: 'OWNER DEPENDENCY',
+    q: 'If you took two weeks completely off — no calls, no texts — what would happen to your business?',
+    scored: true,
+    opts: [
+      { t: 'It would run smoothly without me',                     p: 10 },
+      { t: 'Some issues, but the team would manage',               p: 6  },
+      { t: 'I\'d have to check in daily or things fall apart',     p: 2  },
+      { t: 'The business doesn\'t work without me',                p: 0  }
+    ]
+  }
+];
+
+var current = 0;
+var answers = {};
+var LETTERS = ['A','B','C','D','E'];
+
+function render() {
+  var q   = QUESTIONS[current];
+  var pct = Math.round(((current + 1) / QUESTIONS.length) * 100);
+
+  document.getElementById('prog').style.width = pct + '%';
+  document.getElementById('q-counter').textContent = (current + 1) + ' of ' + QUESTIONS.length;
+
+  var opts = q.opts.map(function(o, i) {
+    var val = q.scored ? o.p : o.v;
+    return '<button class="answer-btn" onclick="pick(' + val + ',' + i + ')" aria-label="' + o.t + '">' +
+      '<span class="answer-letter">' + LETTERS[i] + '</span>' +
+      '<span>' + o.t + '</span>' +
+    '</button>';
+  }).join('');
+
+  document.getElementById('q-wrap').innerHTML =
+    '<div class="anim-in">' +
+      '<div style="margin-bottom:10px">' +
+        '<span class="badge badge-blue">' + q.label + '</span>' +
+      '</div>' +
+      '<h2 style="font-size:clamp(20px,5.5vw,30px);margin:14px 0 26px;line-height:1.2">' + q.q + '</h2>' +
+      '<div class="answer-grid">' + opts + '</div>' +
+    '</div>';
+}
+
+function pick(value, idx) {
+  var q = QUESTIONS[current];
+  answers[q.id] = value;
+
+  // Highlight selection
+  var btns = document.querySelectorAll('.answer-btn');
+  for (var i = 0; i < btns.length; i++) btns[i].disabled = true;
+  if (btns[idx]) btns[idx].classList.add('sel');
+
+  // Pixel event on 5th question
+  if (current === 4 && typeof fbq !== 'undefined') {
+    fbq('track', 'Search', { content_name: 'Scan Midpoint' });
+  }
+
+  setTimeout(function() {
+    current++;
+    if (current >= QUESTIONS.length) {
+      finalize();
+    } else {
+      render();
+    }
+  }, 280);
+}
+
+function finalize() {
+  // Score calculation
+  var total = 0, maxPts = 0;
+  var byQ = {};
+  QUESTIONS.forEach(function(q) {
+    if (!q.scored) return;
+    maxPts += 10;
+    var pts = answers[q.id] || 0;
+    total += pts;
+    byQ[q.id] = pts;
+  });
+  var score = Math.round((total / maxPts) * 100);
+
+  // Identify top leaks (worst scores)
+  var scored = Object.keys(byQ).map(function(k){ return { id: k, pts: byQ[k] }; });
+  scored.sort(function(a,b){ return a.pts - b.pts; });
+  var topLeaks = scored.slice(0,3).map(function(x){ return x.id; });
+
+  localStorage.setItem('st_answers',   JSON.stringify(answers));
+  localStorage.setItem('st_score',     score);
+  localStorage.setItem('st_points',    total);
+  localStorage.setItem('st_max',       maxPts);
+  localStorage.setItem('st_top_leaks', JSON.stringify(topLeaks));
+  localStorage.setItem('st_by_q',      JSON.stringify(byQ));
+
+  if (typeof fbq !== 'undefined') {
+    fbq('track', 'CompleteRegistration', { content_name: 'Scan Complete', value: score });
+  }
+
+  window.location.href = 'results.html';
+}
+
+render();
+</script>
+
+</body>
+</html>
