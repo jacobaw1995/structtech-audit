@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Your Roadmap | StructTech</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg:          #0a0f1e;
+      --bg-card:     #111827;
+      --bg-card-2:   #0f172a;
+      --border:      #1e293b;
+      --orange:      #f97316;
+      --orange-hl:   #fb923c;
+      --orange-dim:  rgba(249,115,22,0.12);
+      --blue:        #2563eb;
+      --blue-hl:     #3b82f6;
+      --green:       #22c55e;
+      --green-dim:   rgba(34,197,94,0.12);
+      --red:         #ef4444;
+      --white:       #f8fafc;
+      --gray:        #94a3b8;
+      --muted:       #64748b;
+      --font-head:   'Bebas Neue', sans-serif;
+      --font-mono:   'DM Mono', monospace;
+      --font-body:   'DM Sans', sans-serif;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--white); font-family:var(--font-body); min-height:100vh; }
+    .wrap { max-width:640px; margin:0 auto; padding:24px 16px 80px; }
+
+    /* Header */
+    .hd { text-align:center; padding:18px 0 8px; }
+    .hd .logo { font-family:var(--font-head); font-size:22px; letter-spacing:0.06em; color:var(--white); text-decoration:none; }
+    .hd .logo .slash { color:var(--orange); }
+    .hd .sub { font-family:var(--font-mono); font-size:10px; letter-spacing:0.18em; color:var(--muted); margin-top:2px; }
+
+    /* Client banner */
+    .banner { background:linear-gradient(135deg,#0d1326,#111929); border:1px solid var(--border); border-radius:14px; padding:22px 20px; margin:18px 0; text-align:center; }
+    .banner h1 { font-family:var(--font-head); font-size:clamp(28px,7vw,38px); letter-spacing:0.03em; line-height:1.05; }
+    .banner h1 .co { color:var(--orange); }
+    .banner .meta { font-family:var(--font-mono); font-size:11px; color:var(--gray); margin-top:6px; }
+
+    /* Overall progress */
+    .overall { margin:6px 0 26px; }
+    .overall .lbl { display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:11px; color:var(--gray); letter-spacing:0.1em; margin-bottom:8px; }
+    .overall .lbl b { color:var(--orange); font-weight:500; }
+    .obar { height:14px; background:var(--bg-card); border:1px solid var(--border); border-radius:99px; overflow:hidden; }
+    .obar-fill { height:100%; width:0%; border-radius:99px;
+      background:linear-gradient(90deg,var(--orange),var(--orange-hl));
+      transition:width 1s cubic-bezier(.22,1,.36,1); }
+
+    /* Level cards */
+    .level { border:1px solid var(--border); border-radius:14px; margin-bottom:18px; overflow:hidden; background:var(--bg-card); transition:all .3s; }
+    .level.active { border-color:var(--orange); box-shadow:0 0 24px rgba(249,115,22,0.15); }
+    .level.complete { border-color:var(--green); }
+    .level.locked { opacity:0.55; }
+
+    .lvl-hd { display:flex; align-items:center; gap:14px; padding:16px 18px; cursor:pointer; }
+    .lvl-badge { width:46px; height:46px; border-radius:12px; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--font-head); font-size:22px; letter-spacing:0.02em; }
+    .active   .lvl-badge { background:var(--orange-dim); color:var(--orange); border:1.5px solid var(--orange); }
+    .complete .lvl-badge { background:var(--green-dim); color:var(--green); border:1.5px solid var(--green); }
+    .locked   .lvl-badge { background:var(--bg-card-2); color:var(--muted); border:1.5px solid var(--border); }
+
+    .lvl-info { flex:1; min-width:0; }
+    .lvl-tag { font-family:var(--font-mono); font-size:9px; letter-spacing:0.16em; margin-bottom:3px; }
+    .active   .lvl-tag { color:var(--orange); }
+    .complete .lvl-tag { color:var(--green); }
+    .locked   .lvl-tag { color:var(--muted); }
+    .lvl-title { font-size:16px; font-weight:700; line-height:1.2; }
+    .locked .lvl-title { color:var(--gray); }
+    .lvl-pct { font-family:var(--font-mono); font-size:12px; color:var(--gray); flex-shrink:0; }
+    .complete .lvl-pct { color:var(--green); }
+
+    .lvl-bar { height:6px; background:var(--bg-card-2); margin:0 18px; border-radius:99px; overflow:hidden; }
+    .lvl-bar-fill { height:100%; width:0%; border-radius:99px; background:var(--orange); transition:width .8s cubic-bezier(.22,1,.36,1); }
+    .complete .lvl-bar-fill { background:var(--green); }
+
+    .lvl-why { padding:12px 18px 4px; font-size:13px; color:var(--gray); line-height:1.6; }
+
+    /* Milestones */
+    .miles { padding:12px 14px 16px; display:flex; flex-direction:column; gap:8px; }
+    .mile { display:flex; align-items:flex-start; gap:12px; background:var(--bg-card-2);
+      border:1px solid var(--border); border-radius:10px; padding:12px 14px; transition:all .25s; }
+    .mile.done { border-color:rgba(34,197,94,0.4); background:rgba(34,197,94,0.05); }
+    .mile .box { width:24px; height:24px; border-radius:7px; border:2px solid var(--muted); flex-shrink:0;
+      display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer;
+      user-select:none; transition:all .2s; margin-top:1px; background:transparent; color:transparent; }
+    .mile.done .box { background:var(--green); border-color:var(--green); color:#fff; }
+    .mile .box.readonly { cursor:default; }
+    .mile .box:not(.readonly):hover { border-color:var(--orange); transform:scale(1.08); }
+    .mile-body { flex:1; min-width:0; }
+    .mile-label { font-size:14px; font-weight:500; line-height:1.45; }
+    .mile.done .mile-label { color:var(--gray); text-decoration:line-through; text-decoration-color:rgba(34,197,94,0.6); }
+    .mile-owner { display:inline-block; font-family:var(--font-mono); font-size:9px; letter-spacing:0.12em;
+      padding:2px 8px; border-radius:99px; margin-top:6px; }
+    .mile-owner.jacob  { background:var(--orange-dim); color:var(--orange-hl); }
+    .mile-owner.client { background:rgba(37,99,235,0.15); color:var(--blue-hl); }
+
+    .locked .miles, .locked .lvl-why { display:none; }
+    .locked .lvl-bar { visibility:hidden; }
+    .lock-note { padding:0 18px 16px; font-family:var(--font-mono); font-size:11px; color:var(--muted); }
+    .locked .lock-note { display:block; }
+    .lock-note { display:none; }
+
+    /* Level complete flair */
+    .lvl-done-note { margin:0 18px 16px; padding:10px 14px; border-radius:10px;
+      background:var(--green-dim); border:1px solid rgba(34,197,94,0.35);
+      font-family:var(--font-mono); font-size:11px; letter-spacing:0.08em; color:var(--green); text-align:center; }
+
+    /* Footer CTA */
+    .foot { text-align:center; margin-top:30px; }
+    .foot p { font-size:12px; color:var(--muted); margin-bottom:4px; }
+    .foot a { color:var(--gray); }
+
+    /* States */
+    .center-msg { text-align:center; padding:80px 20px; color:var(--gray); font-size:15px; }
+
+    @keyframes pop { 0%{transform:scale(0.6)} 60%{transform:scale(1.15)} 100%{transform:scale(1)} }
+    .mile.done .box { animation:pop .3s ease; }
+
+    .toast { position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(80px);
+      background:var(--bg-card); border:1px solid var(--green); color:var(--green);
+      font-family:var(--font-mono); font-size:12px; padding:10px 20px; border-radius:99px;
+      transition:transform .35s cubic-bezier(.22,1,.36,1); z-index:50; }
+    .toast.show { transform:translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="hd">
+    <a class="logo" href="https://structtek.com">STRUCTTECH <span class="slash">/</span> ROADMAP</a>
+    <div class="sub">YOUR OPERATION, SYSTEMATIZED</div>
+  </div>
+
+  <div id="app"><div class="center-msg">Loading your roadmap…</div></div>
+
+  <div class="foot">
+    <p>Questions? <a href="mailto:jacob@structtek.com">jacob@structtek.com</a> · 937.467.2660</p>
+    <p><a href="https://structtek.com">structtek.com</a></p>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ SAVED</div>
+
+<script>
+var SUPA_URL = 'https://ejlhrykcdfcyeooooodx.supabase.co';
+var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqbGhyeWtjZGZjeWVvb29vb2R4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYyODM2OTUsImV4cCI6MjA1MTg1OTY5NX0.dLa4yCf6yIhOiFd0DjsHv0kMpBLaQS63m9fDLQtAsgQ';
+
+var params  = new URLSearchParams(location.search);
+var TOKEN   = params.get('c') || '';
+var IS_ADMIN = params.get('admin') === 'jw937';   // Jacob's link adds &admin=jw937
+
+var roadmap = null;
+
+function headers() {
+  return { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Content-Type': 'application/json' };
+}
+
+function load() {
+  if (!TOKEN) { document.getElementById('app').innerHTML = '<div class="center-msg">No roadmap link provided.<br>Check the link Jacob sent you.</div>'; return; }
+  fetch(SUPA_URL + '/rest/v1/client_roadmaps?token=eq.' + encodeURIComponent(TOKEN) + '&select=*', { headers: headers() })
+    .then(function(r){ return r.json(); })
+    .then(function(rows){
+      if (!rows || !rows.length) {
+        document.getElementById('app').innerHTML = '<div class="center-msg">Roadmap not found.<br>Double-check your link or contact Jacob.</div>';
+        return;
+      }
+      roadmap = rows[0];
+      render();
+    })
+    .catch(function(){ document.getElementById('app').innerHTML = '<div class="center-msg">Could not load. Check your connection and refresh.</div>'; });
+}
+
+function levelStats(lvl) {
+  var total = lvl.milestones.length, done = 0;
+  lvl.milestones.forEach(function(m){ if (m.done) done++; });
+  return { total: total, done: done, pct: total ? Math.round(done/total*100) : 0, complete: total > 0 && done === total };
+}
+
+function render() {
+  var lvls = roadmap.levels || [];
+  var html = '';
+
+  // Banner
+  html += '<div class="banner"><h1>' + esc(roadmap.client_name).toUpperCase() +
+          '<br><span class="co">' + esc(roadmap.company).toUpperCase() + '</span></h1>' +
+          '<div class="meta">' + (roadmap.trade ? esc(roadmap.trade).toUpperCase() + ' · ' : '') +
+          (roadmap.crew_size ? roadmap.crew_size + ' CREW · ' : '') +
+          'SCAN SCORE ' + (roadmap.score || '—') + '/100</div></div>';
+
+  // Overall progress
+  var allTotal = 0, allDone = 0;
+  lvls.forEach(function(l){ var s = levelStats(l); allTotal += s.total; allDone += s.done; });
+  var overallPct = allTotal ? Math.round(allDone/allTotal*100) : 0;
+  html += '<div class="overall"><div class="lbl"><span>MISSION PROGRESS</span><b>' + overallPct + '%</b></div>' +
+          '<div class="obar"><div class="obar-fill" data-w="' + overallPct + '"></div></div></div>';
+
+  // Levels
+  var prevComplete = true; // level 1 always unlocked
+  lvls.forEach(function(lvl, i) {
+    var s = levelStats(lvl);
+    var state = s.complete ? 'complete' : (prevComplete ? 'active' : 'locked');
+    var unlocked = state !== 'locked';
+
+    html += '<div class="level ' + state + '">';
+    html += '<div class="lvl-hd">';
+    html += '<div class="lvl-badge">' + (s.complete ? '✓' : (unlocked ? (i+1) : '🔒')) + '</div>';
+    html += '<div class="lvl-info"><div class="lvl-tag">LEVEL ' + (i+1) + (s.complete ? ' — COMPLETE' : (unlocked ? ' — IN PROGRESS' : ' — LOCKED')) + '</div>';
+    html += '<div class="lvl-title">' + esc(lvl.title) + '</div></div>';
+    html += '<div class="lvl-pct">' + s.done + '/' + s.total + '</div>';
+    html += '</div>';
+
+    html += '<div class="lvl-bar"><div class="lvl-bar-fill" data-w="' + s.pct + '"></div></div>';
+
+    if (unlocked && lvl.why) html += '<div class="lvl-why">' + esc(lvl.why) + '</div>';
+
+    if (unlocked) {
+      html += '<div class="miles">';
+      lvl.milestones.forEach(function(m, j) {
+        var canToggle = IS_ADMIN || m.owner === 'client';
+        html += '<div class="mile' + (m.done ? ' done' : '') + '">';
+        html += '<div class="box' + (canToggle ? '' : ' readonly') + '" onclick="' + (canToggle ? 'toggle(' + i + ',' + j + ')' : '') + '">✓</div>';
+        html += '<div class="mile-body"><div class="mile-label">' + esc(m.label) + '</div>';
+        html += '<span class="mile-owner ' + (m.owner === 'client' ? 'client' : 'jacob') + '">' +
+                (m.owner === 'client' ? 'YOUR MOVE' : 'STRUCTTECH BUILDS') + '</span></div>';
+        html += '</div>';
+      });
+      html += '</div>';
+      if (s.complete) html += '<div class="lvl-done-note">🏆 LEVEL ' + (i+1) + ' COMPLETE — SYSTEM LIVE</div>';
+    } else {
+      html += '<div class="lock-note">Unlocks when Level ' + i + ' is complete</div>';
+    }
+
+    html += '</div>';
+    prevComplete = s.complete;
+  });
+
+  document.getElementById('app').innerHTML = html;
+
+  // animate bars in
+  requestAnimationFrame(function(){
+    document.querySelectorAll('[data-w]').forEach(function(el){ el.style.width = el.getAttribute('data-w') + '%'; });
+  });
+}
+
+function toggle(li, mi) {
+  var m = roadmap.levels[li].milestones[mi];
+  m.done = !m.done;
+  m.done_at = m.done ? new Date().toISOString() : null;
+  render();
+  save();
+}
+
+var saveTimer = null;
+function save() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    fetch(SUPA_URL + '/rest/v1/client_roadmaps?token=eq.' + encodeURIComponent(TOKEN), {
+      method: 'PATCH',
+      headers: headers(),
+      body: JSON.stringify({ levels: roadmap.levels })
+    }).then(function(r){
+      if (r.ok) { var t = document.getElementById('toast'); t.classList.add('show'); setTimeout(function(){ t.classList.remove('show'); }, 1600); }
+    });
+  }, 400);
+}
+
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+load();
+</script>
+</body>
+</html>
